@@ -1,11 +1,19 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, sendPasswordResetEmail, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion, serverTimestamp } from 'firebase/firestore';
-import firebaseConfig from '../firebase-applet-config.json';
+const firebaseConfig = {
+  apiKey: "AIzaSyAOpYyvTYpCSayneWEs2vmuD9UcvCQi6K0",
+  authDomain: "aiimsprep-d2bba.firebaseapp.com",
+  projectId: "aiimsprep-d2bba",
+  storageBucket: "aiimsprep-d2bba.firebasestorage.app",
+  messagingSenderId: "243937757505",
+  appId: "1:243937757505:web:073dd623c271eee903f9c0",
+  measurementId: "G-8713PP1XJ1"
+};
 
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
-export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+export const db = getFirestore(app);
 export const googleProvider = new GoogleAuthProvider();
 
 export const signInWithGoogle = async () => {
