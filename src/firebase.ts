@@ -45,21 +45,29 @@ export const registerWithEmail = async (email: string, pass: string) => {
 };
 
 export const ensureUserDocument = async (user: any) => {
-  if (!user) return [];
+  if (!user) return { purchasedBatches: [], trialEndsAt: 0 };
   const userRef = doc(db, 'users', user.uid);
   const docSnap = await getDoc(userRef);
   
   if (docSnap.exists()) {
-    return docSnap.data().purchasedBatches || [];
+    let data = docSnap.data();
+    if (!data.trialEndsAt) {
+        const trialEndsAt = Date.now() + 2 * 24 * 60 * 60 * 1000;
+        await updateDoc(userRef, { trialEndsAt });
+        return { purchasedBatches: data.purchasedBatches || [], trialEndsAt };
+    }
+    return { purchasedBatches: data.purchasedBatches || [], trialEndsAt: data.trialEndsAt };
   } else {
     // Create new document
+    const trialEndsAt = Date.now() + 2 * 24 * 60 * 60 * 1000;
     await setDoc(userRef, {
       uid: user.uid,
       email: user.email || '',
       createdAt: serverTimestamp(),
-      purchasedBatches: []
+      purchasedBatches: [],
+      trialEndsAt: trialEndsAt
     });
-    return [];
+    return { purchasedBatches: [], trialEndsAt };
   }
 };
 
